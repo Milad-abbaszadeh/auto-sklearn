@@ -178,6 +178,8 @@ def get_smac_object(
     scenario = Scenario(scenario_dict)
     if len(metalearning_configurations) > 0:
         default_config = scenario.cs.get_default_configuration()
+        #TODO for Milad
+        #write function here which load the configuration from openml and put to metalearningconfiguration
         initial_configurations = [default_config] + metalearning_configurations
     else:
         initial_configurations = None

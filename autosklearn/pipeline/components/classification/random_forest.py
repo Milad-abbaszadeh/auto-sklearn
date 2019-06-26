@@ -126,7 +126,10 @@ class RandomForest(
     @staticmethod
     def get_hyperparameter_search_space(dataset_properties=None):
         cs = ConfigurationSpace()
-        n_estimators = Constant("n_estimators", 100)
+        # n_estimators = Constant("n_estimators", 100)
+        n_estimators = UniformIntegerHyperparameter(
+            name="n_estimators", lower=100, upper=600, default_value=100
+        )
         criterion = CategoricalHyperparameter(
             "criterion", ["gini", "entropy"], default_value="gini")
 
@@ -137,11 +140,12 @@ class RandomForest(
         max_features = UniformFloatHyperparameter(
             "max_features", 0., 1., default_value=0.5)
         
-        max_depth = UnParametrizedHyperparameter("max_depth", "None")
+        # max_depth = UnParametrizedHyperparameter("max_depth", "None")
+        max_depth =UniformIntegerHyperparameter("max_depth", 1, 20, default_value=10)
         min_samples_split = UniformIntegerHyperparameter(
             "min_samples_split", 2, 20, default_value=2)
         min_samples_leaf = UniformIntegerHyperparameter(
-            "min_samples_leaf", 1, 20, default_value=1)
+            "min_samples_leaf", 0, 20, default_value=1)
         min_weight_fraction_leaf = UnParametrizedHyperparameter("min_weight_fraction_leaf", 0.)
         max_leaf_nodes = UnParametrizedHyperparameter("max_leaf_nodes", "None")
         min_impurity_decrease = UnParametrizedHyperparameter('min_impurity_decrease', 0.0)
