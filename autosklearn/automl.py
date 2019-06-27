@@ -487,6 +487,12 @@ class AutoML(BaseEstimator):
             )
             self.runhistory_, self.trajectory_ = \
                 _proc_smac.run_smbo()
+
+            #TODO Milad
+            import pickle
+            print("SAVE RUN HISTORY")
+            pickle.dump(self.runhistory_,open("/home/dfki/Desktop/temp/pickel/runhistory.p","wb"))
+
             trajectory_filename = os.path.join(
                 self._backend.get_smac_output_directory_for_run(self._seed),
                 'trajectory.json')

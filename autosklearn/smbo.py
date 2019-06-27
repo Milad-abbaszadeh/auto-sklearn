@@ -489,7 +489,13 @@ class AutoMLSMBO(object):
                     )
             scenario_dict.update(self.smac_scenario_args)
 
-        runhistory = RunHistory(aggregate_func=average_cost)
+        # runhistory = RunHistory(aggregate_func=average_cost)
+        if os.path.exists("/home/dfki/Desktop/temp/pickel/runhistory.p"):
+            print("load the file from Pikel")
+            import pickle
+            runhistory = pickle.load(open("/home/dfki/Desktop/temp/pickel/runhistory.p", "rb"))
+        else:
+            runhistory = RunHistory(aggregate_func=average_cost)
         smac_args = {
             'scenario_dict': scenario_dict,
             'seed': seed,
@@ -498,6 +504,7 @@ class AutoMLSMBO(object):
             'metalearning_configurations': metalearning_configurations,
             'runhistory': runhistory,
         }
+
         if self.get_smac_object_callback is not None:
             smac = self.get_smac_object_callback(**smac_args)
         else:
