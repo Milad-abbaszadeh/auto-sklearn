@@ -44,6 +44,8 @@ class AutoSklearnEstimator(BaseEstimator):
         smac_scenario_args=None,
         logging_config=None,
         metadata_directory=None,
+        write_history =False,
+        read_history=False,
     ):
         """
         Parameters
@@ -252,6 +254,9 @@ class AutoSklearnEstimator(BaseEstimator):
         self._automl = None  # type: Optional[List[BaseAutoML]]
         # n_jobs after conversion to a number (b/c default is None)
         self._n_jobs = None
+        #Milad
+        self.write_history = write_history
+        self.read_history = read_history
         super().__init__()
 
     def build_automl(
@@ -263,6 +268,7 @@ class AutoSklearnEstimator(BaseEstimator):
         tmp_folder: str,
         output_folder: str,
         smac_scenario_args: Optional[Dict] = None,
+
     ):
 
         if shared_mode:
@@ -307,6 +313,9 @@ class AutoSklearnEstimator(BaseEstimator):
             smac_scenario_args=smac_scenario_args,
             logging_config=self.logging_config,
             metadata_directory=self.metadata_directory,
+
+            write_history = self.write_history,
+            read_history = self.read_history,
         )
 
         return automl
@@ -333,13 +342,14 @@ class AutoSklearnEstimator(BaseEstimator):
                 tmp_folder=self.tmp_folder,
                 output_folder=self.output_folder,
             )
+
             self._automl.append(automl)
             self._automl[0].fit(**kwargs)
         else:
             tmp_folder, output_folder = get_randomized_directory_names(
                 temporary_directory=self.tmp_folder,
                 output_directory=self.output_folder,
-            )
+             )
 
             self._n_jobs = self.n_jobs
             shared_mode = True

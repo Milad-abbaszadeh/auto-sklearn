@@ -215,6 +215,11 @@ class AutoMLSMBO(object):
                  func_eval_time_limit,
                  memory_limit,
                  metric,
+
+                 write_history,
+                 read_history,
+
+
                  watcher, start_num_run=1,
                  data_memory_limit=None,
                  num_metalearning_cfgs=25,
@@ -232,6 +237,12 @@ class AutoMLSMBO(object):
                  smac_scenario_args=None,
                  get_smac_object_callback=None):
         super(AutoMLSMBO, self).__init__()
+
+        #milad
+        self.write_history= write_history
+        self.read_history = read_history
+
+
         # data related
         self.dataset_name = dataset_name
         self.datamanager = None
@@ -489,13 +500,25 @@ class AutoMLSMBO(object):
                     )
             scenario_dict.update(self.smac_scenario_args)
 
+
+
         # runhistory = RunHistory(aggregate_func=average_cost)
-        if os.path.exists("/home/dfki/Desktop/temp/pickel/runhistory.p"):
+
+
+        if self.read_history:
+            print(self.read_history)
             print("load the file from Pikel")
             import pickle
             runhistory = pickle.load(open("/home/dfki/Desktop/temp/pickel/runhistory.p", "rb"))
+            print(runhistory.config_ids)
+            all_cost = runhistory.cost_per_config
+            print("the best config is: ")
+            print(min(all_cost.items(),key=lambda x: x[1]))
         else:
             runhistory = RunHistory(aggregate_func=average_cost)
+
+
+
         smac_args = {
             'scenario_dict': scenario_dict,
             'seed': seed,

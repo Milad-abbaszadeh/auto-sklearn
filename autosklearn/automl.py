@@ -64,6 +64,10 @@ class AutoML(BaseEstimator):
                  backend,
                  time_left_for_this_task,
                  per_run_time_limit,
+
+                 write_history,
+                 read_history,
+
                  initial_configurations_via_metalearning=25,
                  ensemble_size=1,
                  ensemble_nbest=1,
@@ -127,6 +131,10 @@ class AutoML(BaseEstimator):
         self.models_ = None
         self.ensemble_ = None
         self._can_predict = False
+
+        #milad
+        self.write_history =write_history
+        self.read_history =read_history
 
         self._debug_mode = debug_mode
 
@@ -484,14 +492,41 @@ class AutoML(BaseEstimator):
                 disable_file_output=self._disable_evaluator_output,
                 get_smac_object_callback=self._get_smac_object_callback,
                 smac_scenario_args=self._smac_scenario_args,
+
+                write_history =self.write_history,
+                read_history =self.read_history,
             )
             self.runhistory_, self.trajectory_ = \
                 _proc_smac.run_smbo()
 
+
+            print("999999999999999999999999999999999999999")
+            print(self.runhistory_)
+            print("777777777777777777777777777777777777777")
+            print(self.trajectory_)
+
+            print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
+            print(self.write_history,self.read_history)
+            print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
             #TODO Milad
-            import pickle
-            print("SAVE RUN HISTORY")
-            pickle.dump(self.runhistory_,open("/home/dfki/Desktop/temp/pickel/runhistory.p","wb"))
+            if self.write_history:
+                import pickle
+                print("SAVE RUN HISTORY")
+                pickle.dump(self.runhistory_, open("/home/dfki/Desktop/temp/pickel/runhistory.p", "wb"))
+                print(self.runhistory_.config_ids)
+                print(self.runhistory_.cost_per_config)
+                all_cost = self.runhistory_.cost_per_config
+                print("the best config is: ")
+                print(min(all_cost.items(), key=lambda x: x[1]))
+
+            # print(self.runhistory_.config_ids)
+            # all_cost = self.runhistory_.cost_per_config
+            # print("the best config is: ")
+            # print(min(all_cost.items(), key=lambda x: x[1]))
+
+
+
+
 
             trajectory_filename = os.path.join(
                 self._backend.get_smac_output_directory_for_run(self._seed),
