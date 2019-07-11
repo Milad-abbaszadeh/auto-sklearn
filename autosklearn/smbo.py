@@ -409,7 +409,7 @@ class AutoMLSMBO(object):
         else:
             instances = [[json.dumps({'task_id': self.dataset_name})]]
 
-        # TODO rebuild target algorithm to be it's own target algorithm
+        # TODO rebuild targ to be it's own target algorithmet algorithm
         # evaluator, which takes into account that a run can be killed prior
         # to the model being fully fitted; thus putting intermediate results
         # into a queue and querying them once the time is over
