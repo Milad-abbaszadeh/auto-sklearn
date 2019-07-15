@@ -501,7 +501,7 @@ class AutoML(BaseEstimator):
 
 
             print("999999999999999999999999999999999999999")
-            print(self.runhistory_)
+            print(self.runhistory_.config_ids)
             print("777777777777777777777777777777777777777")
             print(self.trajectory_)
 
