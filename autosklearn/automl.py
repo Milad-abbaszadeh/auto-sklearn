@@ -501,20 +501,27 @@ class AutoML(BaseEstimator):
 
 
             print("999999999999999999999999999999999999999")
-            print(self.runhistory_.config_ids)
-            print("777777777777777777777777777777777777777")
-            print(self.trajectory_)
+            # print(self.runhistory_.config_ids)
 
-            print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
-            print(self.write_history,self.read_history)
-            print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
+            with open("/home/dfki/Desktop/temp/pickel/file.txt", "a") as myFile:
+                myFile.write("******** RUN HISTORY ***********\n\n")
+                myFile.write(str(self.runhistory_.config_ids))
+                myFile.write("************************\n\n")
+                myFile.write("******** TRAJECTORY ***********\n\n")
+                myFile.write(str(self.trajectory_))
+            print("777777777777777777777777777777777777777")
+            # print(self.trajectory_)
+
+            # print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
+            # print(self.write_history,self.read_history)
+            # print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
             #TODO Milad
             if self.write_history:
                 import pickle
                 print("SAVE RUN HISTORY")
                 pickle.dump(self.runhistory_, open("/home/dfki/Desktop/temp/pickel/runhistory.p", "wb"))
-                print(self.runhistory_.config_ids)
-                print(self.runhistory_.cost_per_config)
+                # print(self.runhistory_.config_ids)
+                # print(self.runhistory_.cost_per_config)
                 all_cost = self.runhistory_.cost_per_config
                 print("the best config is: ")
                 print(min(all_cost.items(), key=lambda x: x[1]))

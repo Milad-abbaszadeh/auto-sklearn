@@ -506,14 +506,21 @@ class AutoMLSMBO(object):
 
 
         if self.read_history:
-            print(self.read_history)
+            # print(self.read_history)
             print("load the file from Pikel")
             import pickle
             runhistory = pickle.load(open("/home/dfki/Desktop/temp/pickel/runhistory.p", "rb"))
-            print(runhistory.config_ids)
+            # print(runhistory.config_ids)
             all_cost = runhistory.cost_per_config
             print("the best config is: ")
             print(min(all_cost.items(),key=lambda x: x[1]))
+
+            # with open("/home/dfki/Desktop/temp/pickel/file.txt", "a") as myFile:
+            #     myFile.write("^^^^^^^  READ EXIST RUN HISTORY ^^^^^^^^^^\n\n")
+            #     myFile.write(str(runhistory.config_ids))
+            #     myFile.write("^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\n")
+
+
         else:
             runhistory = RunHistory(aggregate_func=average_cost)
 
