@@ -506,20 +506,18 @@ class AutoMLSMBO(object):
 
 
         if self.read_history:
-            # print(self.read_history)
+            import create_Runhistory
+            import smac
+            # runhistory =create_Runhistory.runhistory_builder(ta=ta,scenario_dic=scenario_dict,rng=seed)
+
+
             print("load the file from Pikel")
             import pickle
             runhistory = pickle.load(open("/home/dfki/Desktop/temp/pickel/runhistory.p", "rb"))
-            # print(runhistory.config_ids)
-            all_cost = runhistory.cost_per_config
-            print("the best config is: ")
-            print(min(all_cost.items(),key=lambda x: x[1]))
-
-            # with open("/home/dfki/Desktop/temp/pickel/file.txt", "a") as myFile:
-            #     myFile.write("^^^^^^^  READ EXIST RUN HISTORY ^^^^^^^^^^\n\n")
-            #     myFile.write(str(runhistory.config_ids))
-            #     myFile.write("^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\n")
-
+            # # print(runhistory.config_ids)
+            # all_cost = runhistory.cost_per_config
+            # print("the best config is: ")
+            # print(min(all_cost.items(),key=lambda x: x[1]))
 
         else:
             runhistory = RunHistory(aggregate_func=average_cost)
@@ -552,8 +550,20 @@ class AutoMLSMBO(object):
                 logger=smac.solver.logger,
             )
 
+        if self.read_history:
+            import pickle
+            last_trajectories = pickle.load(open("/home/dfki/Desktop/temp/pickel/trajectory.p", "rb"))
+            present_trajectories = smac.solver.intensifier.traj_logger.trajectory
+            # best_last_trajectory = last_trajectories[-1]
+            # self.trajectory = smac.solver.intensifier.traj_logger.trajectory
+            # self.trajectory.append(best_last_trajectory)
+            self.trajectory = present_trajectories + last_trajectories
+            # print("last run's trajectory is added ^^")
+        else:
+            self.trajectory = smac.solver.intensifier.traj_logger.trajectory
+
         self.runhistory = smac.solver.runhistory
-        self.trajectory = smac.solver.intensifier.traj_logger.trajectory
+
 
         return self.runhistory, self.trajectory
 

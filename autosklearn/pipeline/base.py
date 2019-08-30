@@ -38,8 +38,10 @@ class BasePipeline(Pipeline):
         if config is None:
             self.configuration_ = self.config_space.get_default_configuration()
         else:
+            # Morteza
             if isinstance(config, dict):
-                config = Configuration(self.config_space, config)
+                self.f = Configuration
+                config = self.f(self.config_space, config)
             if self.config_space != config.configuration_space:
                 print(self.config_space._children)
                 print(config.configuration_space._children)

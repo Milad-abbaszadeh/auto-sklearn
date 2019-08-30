@@ -344,6 +344,8 @@ class AutoSklearnEstimator(BaseEstimator):
             )
 
             self._automl.append(automl)
+
+
             self._automl[0].fit(**kwargs)
         else:
             tmp_folder, output_folder = get_randomized_directory_names(

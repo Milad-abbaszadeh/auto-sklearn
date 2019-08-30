@@ -209,6 +209,13 @@ class AutoML(BaseEstimator):
             dataset_name=dataset_name,
         )
 
+        #milad
+        #pickel the loaded_data_manager for creating the Runhistory
+        import pickle
+        print("SAVE datamanager")
+        pickle.dump(loaded_data_manager, open("/home/dfki/Desktop/temp/pickel/loaded_data_manager.p", "wb"))
+
+
         return self._fit(
             datamanager=loaded_data_manager,
             metric=metric,
@@ -496,8 +503,15 @@ class AutoML(BaseEstimator):
                 write_history =self.write_history,
                 read_history =self.read_history,
             )
+
+            #milad
+            import pickle
+            print("SAVE _proc_smac")
+            pickle.dump(_proc_smac, open("/home/dfki/Desktop/temp/pickel/_proc_smac.p", "wb"))
+
             self.runhistory_, self.trajectory_ = \
                 _proc_smac.run_smbo()
+
 
 
             print("999999999999999999999999999999999999999")
@@ -520,6 +534,8 @@ class AutoML(BaseEstimator):
                 import pickle
                 print("SAVE RUN HISTORY")
                 pickle.dump(self.runhistory_, open("/home/dfki/Desktop/temp/pickel/runhistory.p", "wb"))
+                pickle.dump(self.trajectory_, open("/home/dfki/Desktop/temp/pickel/trajectory.p", "wb"))
+
                 # print(self.runhistory_.config_ids)
                 # print(self.runhistory_.cost_per_config)
                 all_cost = self.runhistory_.cost_per_config

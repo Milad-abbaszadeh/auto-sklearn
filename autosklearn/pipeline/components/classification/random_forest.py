@@ -128,7 +128,7 @@ class RandomForest(
         cs = ConfigurationSpace()
         # n_estimators = Constant("n_estimators", 100)
         n_estimators = UniformIntegerHyperparameter(
-            name="n_estimators", lower=100, upper=600, default_value=100
+            name="n_estimators", lower=10, upper=600, default_value=100
         )
         criterion = CategoricalHyperparameter(
             "criterion", ["gini", "entropy"], default_value="gini")
