@@ -140,7 +140,7 @@ class RandomForest(
         max_features = UniformFloatHyperparameter(
             "max_features", 0., 1., default_value=0.5)
         
-        # max_depth = UnParametrizedHyperparameter("max_depth", "None")
+        # max_depth = UnParametrizedHyperparameter("max_depth", "none")
         max_depth =UniformIntegerHyperparameter("max_depth", 1, 20, default_value=10)
         min_samples_split = UniformIntegerHyperparameter(
             "min_samples_split", 2, 20, default_value=2)
@@ -151,8 +151,11 @@ class RandomForest(
         min_impurity_decrease = UnParametrizedHyperparameter('min_impurity_decrease', 0.0)
         bootstrap = CategoricalHyperparameter(
             "bootstrap", ["True", "False"], default_value="True")
+
+        random_state = UniformIntegerHyperparameter(
+            "random_state", 0, 20, default_value=3)
         cs.add_hyperparameters([n_estimators, criterion, max_features,
                                 max_depth, min_samples_split, min_samples_leaf,
                                 min_weight_fraction_leaf, max_leaf_nodes,
-                                bootstrap, min_impurity_decrease])
+                                bootstrap, min_impurity_decrease,random_state])
         return cs

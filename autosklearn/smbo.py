@@ -506,23 +506,54 @@ class AutoMLSMBO(object):
 
 
         if self.read_history:
+            #old version
+            # print("load the file from Pikel")
+            # import pickle
+            # runhistory = pickle.load(open("/home/dfki/Desktop/temp/pickel/runhistory.p", "rb"))
+
+
+            #new version
             import create_Runhistory
             import smac
-            # runhistory =create_Runhistory.runhistory_builder(ta=ta,scenario_dic=scenario_dict,rng=seed)
-
-
-            print("load the file from Pikel")
-            import pickle
-            runhistory = pickle.load(open("/home/dfki/Desktop/temp/pickel/runhistory.p", "rb"))
-            # # print(runhistory.config_ids)
-            # all_cost = runhistory.cost_per_config
-            # print("the best config is: ")
-            # print(min(all_cost.items(),key=lambda x: x[1]))
+            values = {'balancing:strategy': 'none',
+             'categorical_encoding:__choice__': 'no_encoding',
+             'classifier:__choice__': 'random_forest',
+             'imputation:strategy': 'mean',
+             'preprocessor:__choice__': 'pca',
+             # 'preprocessor:pca:keep_variance': 0.99,
+             # 'preprocessor:copy': True,
+             # 'preprocessor:iterated_power': 'auto',
+             # 'preprocessor:n_components': 'none',
+             # 'preprocessor:random_state': 'none',
+             # 'preprocessor:svd_solver': 'auto',
+             # 'preprocessor:tol': 0.0,
+             # 'preprocessor:whiten': 'False',
+             'preprocessor:pca:whiten' :'False',
+             'rescaling:__choice__': 'none',
+             'classifier:random_forest:bootstrap': 'True',
+             # 'classifier:random_forest:class_weight': 'none',
+             'classifier:random_forest:criterion': 'entropy',
+             'classifier:random_forest:max_depth': 10,
+             'classifier:random_forest:max_features':0.45000000000000001, #auto
+             'classifier:random_forest:max_leaf_nodes': 'None',
+             'classifier:random_forest:min_impurity_decrease': 0.0,
+             # 'classifier:random_forest:min_impurity_split': '1e-07',
+             'classifier:random_forest:min_samples_leaf': 6,
+             'classifier:random_forest:min_samples_split': 7,
+             'classifier:random_forest:min_weight_fraction_leaf': 0.0,
+             'classifier:random_forest:n_estimators': 512,
+             'classifier:random_forest:random_state': 3,
+             # 'classifier:random_forest:n_jobs': 1,
+             # 'classifier:random_forest:oob_score': 'False',
+             # 'classifier:random_forest:random_state': 'none',
+             # 'classifier:random_forest:verbose': 0,
+             # 'classifier:random_forest:warm_start': 'False',
+             }
+            config = create_Runhistory.defult_config_builder(configspace =self.config_space,values=values)
+            runhistory,traj_logger=create_Runhistory.runhistory_builder(ta=ta,scenario_dic=scenario_dict,rng=seed,backend =self.backend,config_milad=config)
 
         else:
             runhistory = RunHistory(aggregate_func=average_cost)
-
-
 
         smac_args = {
             'scenario_dict': scenario_dict,
@@ -551,14 +582,21 @@ class AutoMLSMBO(object):
             )
 
         if self.read_history:
+
+
+            #old version
+            # last_trajectories = pickle.load(open("/home/dfki/Desktop/temp/pickel/trajectory.p", "rb"))
+            # self.trajectory = last_trajectories
+
+            #new version
             import pickle
-            last_trajectories = pickle.load(open("/home/dfki/Desktop/temp/pickel/trajectory.p", "rb"))
+            import create_Runhistory
+            pickle.dump(runhistory, open("/home/dfki/Desktop/temp/pickel/new_runhistory.p", "wb"))
+            last_trajectories = create_Runhistory.trajectory_builder(traj_logger=traj_logger,config_milad=config)
             present_trajectories = smac.solver.intensifier.traj_logger.trajectory
-            # best_last_trajectory = last_trajectories[-1]
-            # self.trajectory = smac.solver.intensifier.traj_logger.trajectory
-            # self.trajectory.append(best_last_trajectory)
             self.trajectory = present_trajectories + last_trajectories
-            # print("last run's trajectory is added ^^")
+            pickle.dump(self.trajectory, open("/home/dfki/Desktop/temp/pickel/new_trajectory.p", "wb"))
+
         else:
             self.trajectory = smac.solver.intensifier.traj_logger.trajectory
 
